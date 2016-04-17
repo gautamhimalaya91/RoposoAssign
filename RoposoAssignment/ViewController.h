@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 {
     
 }
-@property(nonatomic,strong)NSArray * dataArray;
+@property(nonatomic,strong)NSMutableArray * dataArray;
+@property(nonatomic,strong)NSMutableArray * datalistArray;
+@property(nonatomic,weak)IBOutlet UITableView * roposoTableVIew;
 
 @end
 

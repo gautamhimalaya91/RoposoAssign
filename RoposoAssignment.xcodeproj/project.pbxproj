@@ -18,6 +18,7 @@
 		51CE6B701CC38DD40052C8DF /* RoposoAssignmentUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 51CE6B6F1CC38DD40052C8DF /* RoposoAssignmentUITests.m */; };
 		51CE6B7E1CC38E180052C8DF /* iOS-Android Data.json in Resources */ = {isa = PBXBuildFile; fileRef = 51CE6B7D1CC38E180052C8DF /* iOS-Android Data.json */; };
 		51CE6B811CC393FD0052C8DF /* libCloudinary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51CE6B801CC393FD0052C8DF /* libCloudinary.a */; };
+		E1B463733731EF95736A2ABB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CB04697DFFA920912D1EAA5 /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,9 @@
 		51CE6B861CC394170052C8DF /* Cloudinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cloudinary.h; sourceTree = "<group>"; };
 		51CE6B871CC394170052C8DF /* CLTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLTransformation.h; sourceTree = "<group>"; };
 		51CE6B881CC394170052C8DF /* CLUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUploader.h; sourceTree = "<group>"; };
+		6CB04697DFFA920912D1EAA5 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6E789AF13158A7657CD5F43 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		E0D848CC015A9EE97E507DC2 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +75,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				51CE6B811CC393FD0052C8DF /* libCloudinary.a in Frameworks */,
+				E1B463733731EF95736A2ABB /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +103,8 @@
 				51CE6B631CC38DD40052C8DF /* RoposoAssignmentTests */,
 				51CE6B6E1CC38DD40052C8DF /* RoposoAssignmentUITests */,
 				51CE6B451CC38DD40052C8DF /* Products */,
+				CAEE67477D4A80AC7F002328 /* Pods */,
+				A093B5919A08FE784EFF6F5A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -178,6 +185,23 @@
 			path = Cloudinary;
 			sourceTree = "<group>";
 		};
+		A093B5919A08FE784EFF6F5A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6CB04697DFFA920912D1EAA5 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CAEE67477D4A80AC7F002328 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E0D848CC015A9EE97E507DC2 /* Pods.debug.xcconfig */,
+				A6E789AF13158A7657CD5F43 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -185,9 +209,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 51CE6B741CC38DD40052C8DF /* Build configuration list for PBXNativeTarget "RoposoAssignment" */;
 			buildPhases = (
+				F34C6F5291DC85849A207ED2 /* Check Pods Manifest.lock */,
 				51CE6B401CC38DD40052C8DF /* Sources */,
 				51CE6B411CC38DD40052C8DF /* Frameworks */,
 				51CE6B421CC38DD40052C8DF /* Resources */,
+				0975C940E6AD4E21007D1D8F /* Embed Pods Frameworks */,
+				A6D45E2F38122E4B163AC127 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -303,6 +330,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0975C940E6AD4E21007D1D8F /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A6D45E2F38122E4B163AC127 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F34C6F5291DC85849A207ED2 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		51CE6B401CC38DD40052C8DF /* Sources */ = {
@@ -451,6 +526,7 @@
 		};
 		51CE6B751CC38DD40052C8DF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E0D848CC015A9EE97E507DC2 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = RoposoAssignment/Info.plist;
@@ -467,6 +543,7 @@
 		};
 		51CE6B761CC38DD40052C8DF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A6E789AF13158A7657CD5F43 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = RoposoAssignment/Info.plist;
@@ -548,6 +625,7 @@
 				51CE6B761CC38DD40052C8DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		51CE6B771CC38DD40052C8DF /* Build configuration list for PBXNativeTarget "RoposoAssignmentTests" */ = {
 			isa = XCConfigurationList;
@@ -556,6 +634,7 @@
 				51CE6B791CC38DD40052C8DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		51CE6B7A1CC38DD40052C8DF /* Build configuration list for PBXNativeTarget "RoposoAssignmentUITests" */ = {
 			isa = XCConfigurationList;
@@ -564,6 +643,7 @@
 				51CE6B7C1CC38DD40052C8DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
