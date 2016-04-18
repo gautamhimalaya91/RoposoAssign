@@ -36,11 +36,30 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.dataArray = [[NSMutableArray alloc]init];
     self.datalistArray = [[NSMutableArray alloc]init];
     self.storyIDArray = [[NSMutableArray alloc]init];
-    self.statusArry = [[NSMutableArray alloc]initWithObjects:@"0",@"0",@"0",@"0",@"0",@"0",@"0",@"0",@"0",@"0",@"0", nil];
-    self.detailViewTopConst.constant = self.view.bounds.size.height;
+    self.statusArry = [[NSMutableArray alloc]init];
+    
+    self.detailView.hidden = YES;
+    
+    
+    //applying blurr to the background image
+    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+    UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+    blurEffectView.frame = self.view.bounds;
+    self.imageViewView.clipsToBounds = YES;
+    blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.imageViewView addSubview:blurEffectView];
+    
+    [self.imageViewView bringSubviewToFront:self.nameLabel];
+    [self.imageViewView bringSubviewToFront:self.urlLabel];
+    [self.imageViewView bringSubviewToFront:self.followersLabel];
+    [self.imageViewView bringSubviewToFront:self.displayImg];
+    [self.imageViewView bringSubviewToFront:self.followBtn];
+    
+    [self extractDataFromJson];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -51,16 +70,15 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    [self extractDataFromJson];
+    [super viewWillAppear:YES];
 }
 
 -(void)extractDataFromJson{
-    
     NSString * path = [[NSBundle mainBundle] pathForResource:@"iOS-Android Data" ofType:@"json"];
     NSError *error = nil; // This so that we can access the error if something goes wrong
     NSData *JSONData = [NSData dataWithContentsOfFile:path options:NSDataReadingMappedIfSafe error:&error];
     // Load the file into an NSData object called JSONData
-    // Retrieve local JSON file called example.json
+    // Retrieve local JSON file called iOS-Android Data.json
     
     id object = [NSJSONSerialization
                 JSONObjectWithData:JSONData
@@ -72,18 +90,29 @@
         self.dataArray = (NSMutableArray*)object;
     }
     
-    for (int test = 0; test<self.dataArray.count; test++) {
-        if([[self.dataArray objectAtIndex:test] valueForKey:@"type"]){
-            [self.datalistArray addObject:[self.dataArray objectAtIndex:test]];
+    for (int list = 0; list < self.dataArray.count; list ++)
+    {
+        if([[self.dataArray objectAtIndex:list] valueForKey:@"type"])
+        {
+            [self.datalistArray addObject:[self.dataArray objectAtIndex:list]];
         }
     }
     
+    for (int st = 0; st < self.dataArray.count; st++)
+    {
+        [self.statusArry addObject:@"0"];
+    }
+    
     [self.roposoTableVIew reloadData];
+    
     [self.cancelBtn addTarget:self action:@selector(cancelBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.followBtn addTarget:self action:@selector(followButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
     self.followBtn.clipsToBounds = YES;
     self.followBtn.layer.cornerRadius = 10;
 }
+
+#pragma Mark - Table View delegate and Datasource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -99,15 +128,19 @@
 {
     RoposoCell * roposoCell = (RoposoCell *)[tableView dequeueReusableCellWithIdentifier:REUSE_ROPOSO forIndexPath:indexPath];
     
+    
+    NSString * url = [NSString stringWithFormat:@"%@",[[self.datalistArray objectAtIndex:indexPath.row] objectForKey:@"si"]];
+    [roposoCell.imageImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:nil];
     roposoCell.imageImageView.clipsToBounds = YES;
     roposoCell.imageImageView.layer.cornerRadius = roposoCell.imageImageView.bounds.size.height/2;
+    
     roposoCell.followButton.layer.cornerRadius = 10;
+    
     roposoCell.titleLabel.text = [NSString stringWithFormat:@"%@",[[self.datalistArray objectAtIndex:indexPath.row] objectForKey:@"title"]];
-    roposoCell.imageImageView.backgroundColor = [UIColor blackColor];
-   // NSString * url = [NSString stringWithFormat:@"%@",[[self.datalistArray objectAtIndex:indexPath.row] objectForKey:@"si"]];
-   // roposoCell.imageImageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url]]];
+    
     NSString * shilpaStoryId = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:0] objectForKey:@"id"]];
     NSString * nargisStoryId = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:1] objectForKey:@"id"]];
+    
     if([[NSString stringWithFormat:@"%@",[[self.datalistArray objectAtIndex:indexPath.row] valueForKey:@"db"]]isEqualToString:shilpaStoryId])
     {
         roposoCell.authorLabel.text = [NSString stringWithFormat:@"Author of the story : %@",[[self.dataArray objectAtIndex:0] valueForKey:@"username"]];
@@ -116,12 +149,19 @@
     {
         roposoCell.authorLabel.text = [NSString stringWithFormat:@"Author of the story : %@",[[self.dataArray objectAtIndex:1] valueForKey:@"username"]];
     }
-    roposoCell.descLabel.text = [NSString stringWithFormat:@"%@",[[self.datalistArray objectAtIndex:indexPath.row] valueForKey:@"description"]];
-    if(roposoCell.descLabel.text.length > 20){
-        roposoCell.descHeightConst.constant = 70;
-    }else{
-        [roposoCell.descLabel sizeToFit];
+    
+    NSString * descString = [NSString stringWithFormat:@"%@",[[self.datalistArray objectAtIndex:indexPath.row] valueForKey:@"description"]];
+    
+    CGSize descLength = [self sizeInitWithFontName:@"HelveticaNeue-Light" andDataString:descString andFontSize:12];
+    
+    roposoCell.descLabel.text = descString;
+    roposoCell.descHeightConst.constant = descLength.height;
+    
+    if(roposoCell.descLabel.text.length == 0)
+    {
+        roposoCell.descHeightConst.constant = 0;
     }
+    
     [roposoCell.followButton addTarget:self action:@selector(followButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     roposoCell.followButton.tag = indexPath.row;
     if([[NSString stringWithFormat:@"%@",[self.statusArry objectAtIndex:indexPath.row]]isEqualToString:@"0"])
@@ -130,33 +170,37 @@
     }else{
         [roposoCell.followButton setTitle:@"Unfollow" forState:UIControlStateNormal];
     }
-        //[roposoCell.imageImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:nil];
+    
     return roposoCell;
     
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 200;
+    NSString * descString = [NSString stringWithFormat:@"%@",[[self.datalistArray objectAtIndex:indexPath.row] valueForKey:@"description"]];
+
+    CGSize descLength = [self sizeInitWithFontName:@"HelveticaNeue-Light" andDataString:descString andFontSize:12];
+
+    if(descString.length == 0){
+        return descLength.height +100;
+    }
+    return 150 + descLength.height;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    RoposoCell * roposoCell = (RoposoCell *)[tableView cellForRowAtIndexPath:indexPath];
     
     NSString * shilpaID = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:0] valueForKey:@"id"]];
     NSString * nargisID = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:1] valueForKey:@"id"]];
     self.followBtn.tag = indexPath.row;
-//    if([roposoCell.followButton.titleLabel.text isEqualToString:@"Follow"]){
-//        [self.followBtn setTitle:@"Follow" forState:UIControlStateNormal];
-//    }else{
-//        [self.followBtn setTitle:@"Followed" forState:UIControlStateNormal];
-//    }
+    self.displayImg.clipsToBounds = YES;
+    self.backgroundImg.clipsToBounds = YES;
 
     if([[NSString stringWithFormat:@"%@",[[self.datalistArray objectAtIndex:indexPath.row] valueForKey:@"db"]]isEqualToString:shilpaID]){
         self.nameLabel.text = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:0] valueForKey:@"username"]];
         self.urlLabel.text = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:0] valueForKey:@"handle"]];
         self.followersLabel.text = [NSString stringWithFormat:@"Followers : %@",[[self.dataArray objectAtIndex:0] valueForKey:@"followers"]];
-//        self.createdOnLabel.text = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:0] valueForKey:@"createdOn"]];
+        [self.displayImg setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:0] valueForKey:@"image"]]]];
+        [self.backgroundImg setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:0] valueForKey:@"image"]]]];
         self.aboutLabel.text = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:0] valueForKey:@"about"]];
         [self.aboutLabel sizeToFit];
         
@@ -167,7 +211,8 @@
         self.nameLabel.text = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:1] valueForKey:@"username"]];
         self.urlLabel.text = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:1] valueForKey:@"handle"]];
         self.followersLabel.text = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:1] valueForKey:@"followers"]];
-//        self.createdOnLabel.text = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:1] valueForKey:@"createdOn"]];
+        [self.displayImg setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:1] valueForKey:@"image"]]]];
+        [self.backgroundImg setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:1] valueForKey:@"image"]]]];
         self.aboutLabel.text = [NSString stringWithFormat:@"%@",[[self.dataArray objectAtIndex:1] valueForKey:@"about"]];
         
         [self animateView];
@@ -175,12 +220,18 @@
     
 }
 
--(void)animateView{
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [self.detailView setFrame:CGRectMake(0, self.view.frame.origin.y+64,self.view.frame.size.width, self.view.frame.size.height)];
-    [UIView commitAnimations];
+-(void)animateView
+{
+    self.detailView.hidden = NO;
+    
+    [self.detailView setTransform:CGAffineTransformMakeTranslation(0, [UIScreen mainScreen].bounds.size.height)];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.5 animations:^{
+            [self.detailView setTransform:CGAffineTransformIdentity];
+        }];
+    });
+
 }
 
 -(void)followButtonClicked:(UIButton *)sender{
@@ -197,12 +248,23 @@
 
 }
 
-
--(void)cancelBtnClicked{
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.5];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-    [self.detailView setFrame:CGRectMake(0, self.view.frame.size.height,self.view.frame.size.width, self.view.frame.size.height)];
-    [UIView commitAnimations];
+- (CGSize)sizeInitWithFontName:(NSString*)fontName andDataString:(NSString*)dataString andFontSize:(float)fontSize
+{
+    CGSize size;
+    UIFont *dataFont = [UIFont fontWithName:fontName size:fontSize];
+    NSDictionary *dataDictionary = [NSDictionary dictionaryWithObject:dataFont forKey:NSFontAttributeName];
+    NSMutableAttributedString *dataText = [[NSMutableAttributedString alloc] initWithString:dataString attributes:dataDictionary];
+    
+    CGRect dataFrame = [dataText boundingRectWithSize:(CGSize){304, MAXFLOAT}
+                                              options: (NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                              context:nil];
+    return size = dataFrame.size;
 }
+
+
+-(void)cancelBtnClicked
+{
+    self.detailView.hidden = YES;
+}
+
 @end

@@ -14,10 +14,11 @@
 }
 @property(nonatomic,strong)NSMutableArray * dataArray;
 @property(nonatomic,strong)NSMutableArray * datalistArray;
-@property(nonatomic,weak)IBOutlet UITableView * roposoTableVIew;
 @property(nonatomic,strong)NSMutableArray * statusArry;
-@property(nonatomic,strong)NSMutableDictionary * followDict;
 @property(nonatomic,strong)NSMutableArray * storyIDArray;
+@property(nonatomic,strong)NSMutableDictionary * followDict;
+@property(nonatomic,weak)IBOutlet UITableView * roposoTableVIew;
+
 
 
 @property(nonatomic,weak)IBOutlet UIImageView * backgroundImg;
@@ -29,7 +30,9 @@
 @property(nonatomic,weak)IBOutlet UILabel * aboutLabel;
 @property(nonatomic,weak)IBOutlet NSLayoutConstraint * detailViewTopConst;
 @property(nonatomic,weak)IBOutlet UIView * detailView;
+@property(nonatomic,weak)IBOutlet UIView * imageViewView;
 @property(nonatomic,weak)IBOutlet UIButton * cancelBtn;
 @property(nonatomic,weak)IBOutlet UIButton * followBtn;
+
 @end
 
